@@ -39,7 +39,7 @@ public class Lexer {
                 "    }\n" +
                 "    If = If + a * 2;\n" +
                 "}";
-        cm = new CharMachine(s);
+        cm = new CharMachine(args[0]);
     }
 
     public void start(){
