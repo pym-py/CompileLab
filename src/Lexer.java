@@ -44,7 +44,7 @@ public class Lexer {
         Scanner in = new Scanner(System.in);
         StringBuffer sb = new StringBuffer("");
         while( in.hasNextLine() ){
-            sb.append(in.next());
+            sb.append((in.nextLine()+"\n"));
         }
         cm = new CharMachine(sb.toString());
     }
