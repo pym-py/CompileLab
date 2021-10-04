@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.Scanner;
+
 
 public class Lexer {
 
@@ -39,7 +41,12 @@ public class Lexer {
                 "    }\n" +
                 "    If = If + a * 2;\n" +
                 "}";
-        cm = new CharMachine(args[0]);
+        Scanner in = new Scanner(System.in);
+        StringBuffer sb = new StringBuffer("");
+        while( in.hasNextLine() ){
+            sb.append(in.next());
+        }
+        cm = new CharMachine(sb.toString());
     }
 
     public void start(){
