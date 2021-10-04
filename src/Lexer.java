@@ -80,7 +80,7 @@ public class Lexer {
                 if(cm.ch == '\n'){
                     continue;
                 }
-                System.out.println("err");
+                System.out.println("Err");
                 System.exit(0);
             }
         }
