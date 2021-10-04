@@ -84,7 +84,7 @@ public class Lexer {
             }else if(cm.isReservedSymbols(reservedSymbols)){
                 System.out.println(char2word.get(cm.ch));
             }else{
-                if(cm.ch == '\n'){
+                if(cm.ch == '\n' || cm.ch == '\t'){
                     continue;
                 }
                 System.out.println("Err");
