@@ -104,9 +104,8 @@ public class Test {
             sb.append(in.nextLine()+"\n");
         }
         String s = sb.toString().replaceAll("\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
-        String s2 = sb.toString().replaceAll("//[\\s\\S]*?\\n", "\n");
-        s2 = s2.replaceAll("/\\*{1,2}[\\s\\S]*?\\*/", " ");
-        Test test = new Test(s2);
+        s = handlerComment(sb.toString());
+        Test test = new Test(s);
         test.start();
     }
 }
