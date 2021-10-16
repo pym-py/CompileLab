@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Test {
-    String s = "int main() {\n" +
+    String ss = "int main() {\n" +
             "    return 0x12;\n" +
             "}";
     Lexer lexer = new Lexer(s);
