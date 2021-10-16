@@ -1,35 +1,105 @@
-import java.util.HashMap;
-import java.util.Scanner;
-
-
 public class Lexer {
 
     CharMachine cm ;
 
-    String[] reservedWords = {  "if",  "else",  "while",  "break", "continue",  "return"};
+    SymbolTable symbolTable = SymbolTable.getInstance();
 
-    Character[] reservedSymbols = { '=', ';', '(', ')', '{', '}',
-                                    '+', '*', '/', '<', '>'};
+    public Lexer(CharMachine cm) {
+        this.cm = cm;
+    }
 
-    String[] printWords = {"If", "Else", "While", "Break", "Continue", "Return"};
+    public Lexer(String s){
+        this.cm = new CharMachine(s);
+    }
 
-    String[] printSymbols = {"Assign", "Semicolon", "LPar", "RPar", "LBrace", "RBrace",
-                            "Plus", "Mult", "Div", "Lt", "Gt"};
 
-    HashMap<String, String> words2word = new HashMap<>();
-    HashMap<Character, String> char2word = new HashMap<>();
+    public String getToken(){
+        return cm.getToken();
+    }
 
-    {
-        for(int i = 0;i<reservedWords.length;i++){
-            words2word.put(reservedWords[i], printWords[i]);
-        }
-        for(int i = 0;i<reservedSymbols.length;i++){
-            char2word.put(reservedSymbols[i], printSymbols[i]);
+    public boolean isOctalDigit(String s){
+        return s.matches("[0-7]");
+    }
+
+    public boolean isNonzeroDigit(String s){
+        return s.matches("[1-9]");
+    }
+
+    public boolean isHexadecimalDigit(String s){
+        return s.matches("[0-9a-fA-F]");
+    }
+
+    public boolean isLetter(String s){
+        return s.matches("[a-zA-Z]");
+    }
+
+    public boolean isDigit(String s){
+        return s.matches("[0-9]");
+    }
+
+    public boolean isNumber(String s){
+        int i = 0;
+        if(s.charAt(i) == '0'){
+            i++;
+            if(i == s.length()){
+                return true;
+            }
+            if(s.charAt(i) == 'x'||s.charAt(i) == 'X'){
+                i++;
+                while(i<s.length()){
+                    if(!isHexadecimalDigit(Character.toString(s.charAt(i)))){
+                        return false;
+                    }
+                    i++;
+                }
+                return true;
+            }else if(isOctalDigit(Character.toString(s.charAt(i)))){
+                while(i<s.length()){
+                    if(!isOctalDigit(Character.toString(s.charAt(i)))){
+                        return false;
+                    }
+                    i++;
+                }
+                return true;
+            }else
+                return false;
+        }else if(isNonzeroDigit(Character.toString(s.charAt(i)))){
+            while(i<s.length()){
+                if(!isDigit(Character.toString(s.charAt(i)))){
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        }else
+            return false;
+    }
+
+    public boolean isEnd(){
+        return cm.isDone();
+    }
+
+    public void toNextToken(){
+        if(!cm.isDone()){
+            cm.getNextToken();
+            if(symbolTable.isReservedWord(cm.getToken())){
+//                System.out.println(cm.getToken()); //保留字
+            }else if(isNumber(cm.getToken())){
+//                System.out.println(cm.getToken()); //数字
+            }else if(symbolTable.isVariable(cm.getToken())){
+//                System.out.println("变量");
+            }else{
+//                System.out.println("ERROR");
+            }
         }
     }
 
-    public void read(String[] args){
-        String s = "a = 3;\n" +
+
+
+
+
+    public static void main(String[] args) {
+        Lexer lexer = new Lexer(new CharMachine("a = 3;\n" +
                 "If = 0\n" +
                 "while (a < 4396) {\n" +
                 "    if (a == 010) {\n" +
@@ -40,62 +110,93 @@ public class Lexer {
                 "        a = a + 7;\n" +
                 "    }\n" +
                 "    If = If + a * 2;\n" +
-                "}";
-        Scanner in = new Scanner(System.in);
-        StringBuffer sb = new StringBuffer("");
-        while( in.hasNextLine() ){
-            sb.append((in.nextLine()+"\n"));
-        }
-        cm = new CharMachine(sb.toString());
-    }
-
-    public void start(){
-        while(!cm.isDone()){
-            cm.getChar();
-            cm.getNbc();
-            cm.clearToken();
-            if(cm.isNondigit()){
-                while(cm.isDigit() || cm.isNondigit()){
-                    cm.cat();
-                    cm.getChar();
-                }
-                cm.unGetChar();
-                if(cm.isReservedWords(reservedWords)){
-                    System.out.println(words2word.get(cm.getToken()));
-                }else{
-                    System.out.println("Ident("+cm.getToken()+")");
-                }
-
-            }else if(cm.isDigit()){
-                while(cm.isDigit()){
-                    cm.cat();
-                    cm.getChar();
-                }
-                cm.unGetChar();
-                System.out.println("Number("+cm.getToken()+")");
-            }else if(cm.isEqualSign()){
-                cm.getChar();
-                if(cm.isEqualSign()){
-                    System.out.println("Eq");
-                }else{
-                    System.out.println("Assign");
-                    cm.unGetChar();
-                }
-            }else if(cm.isReservedSymbols(reservedSymbols)){
-                System.out.println(char2word.get(cm.ch));
-            }else{
-                if(cm.ch == '\n' || cm.ch == '\t'){
-                    continue;
-                }
-                System.out.println("Err");
-                System.exit(0);
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        Lexer lexer = new Lexer();
-        lexer.read(args);
-        lexer.start();
+                "}"));
+        String target = "int main() {\n" +
+                "    /*\n" +
+                "    return 123;\n" +
+                "}\n";
+        String s = target.replaceAll("\\/\\/[^\\n]*|\\/\\*([^\\*^\\/]*|[\\*^\\/*]*|[^\\**\\/]*)*\\*+\\/", "");
+        System.out.println(s);
+//        while(!lexer.isEnd()){
+//            lexer.toNextToken();
+//        }
     }
 }
+
+
+class CharMachine {
+    String str = null;
+    int pos = -1;
+    String ch = "";
+    StringBuffer token = new StringBuffer("");
+
+    public CharMachine(String str) {
+        this.str = str;
+    }
+
+    public void getChar(){
+        if(!isDone()){
+            ch = Character.toString(str.charAt(++pos));
+        }
+    }
+
+    public String getToken(){
+        return token.toString();
+    }
+
+    public void getNbc(){
+        while(!isDone() && (ch.equals(" ")||ch.equals("\n")||ch.equals("\t"))){
+            this.getChar();
+        }
+    }
+
+    public void clearToken(){
+        token = new StringBuffer("");
+    }
+
+    public void cat(){
+        token.append(ch);
+    }
+
+    public void unGetChar(){
+        ch = Character.toString(str.charAt(--pos));
+    }
+
+
+    public boolean isBlank(){
+        return ch.equals("\t")||ch.equals(" ")||ch.equals("\n");
+    }
+
+    public void getNextToken(){
+        clearToken();
+        getChar();
+        getNbc();
+        if(ch.equals(";")){
+            cat();
+        }else if(ch.equals("=")){
+            cat();
+            getChar();
+            if(ch.equals("=")){
+                cat();
+            }else {
+                unGetChar();
+            }
+        } else if(ch.matches("[0-9a-zA-Z]")){
+            while(!isDone() && !isBlank() &&  ch.matches("[0-9a-zA-Z]")){
+                cat();
+                getChar();
+            }
+            unGetChar();
+        }else if(SymbolTable.getInstance().isReservedWord(ch)){
+            cat();
+        }else{
+            System.out.println("ERROR");
+        }
+    }
+
+    public boolean isDone(){
+        return pos+1 >= str.length();
+    }
+
+}
+
