@@ -87,6 +87,9 @@ public class Test {
                     System.out.println("i32 " + Integer.parseInt(numberString.substring(2),16));
                 else if(numberString.startsWith("0"))
                     System.out.println("i32 " + Integer.parseInt(numberString.substring(1),8));
+                else{
+                    System.out.println("i32 " + lexer.getToken());
+                }
                 lexer.toNextToken();
                 if(lexer.getToken().equals(";")){
                     lexer.toNextToken();
