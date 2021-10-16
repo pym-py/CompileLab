@@ -4,10 +4,11 @@ public class Test {
     String ss = "int main() {\n" +
             "    return 0x12;\n" +
             "}";
-    Lexer lexer = new Lexer(s);
+    Lexer lexer ;
 
     public Test(String s) {
-        this.s = s;
+        this.ss = s;
+        lexer = new Lexer(s);
     }
     public Test(){
 
