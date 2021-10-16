@@ -96,6 +96,17 @@ public class Test {
             }
         }
     }
+    
+    public static String handlerComment(String s){
+        s = s.replaceAll("//[\\s\\S]*?\\n", "\n");
+        s = s.replaceAll("/\\*{1,2}[\\s\\S]*?\\*/", " ");
+        for(int i = 0;i< s.length();i++){
+            if(s.charAt(i) == '/' || s.charAt(i) == '*'){
+                System.exit(-1);
+            }
+        }
+        return s;
+    }
 
     public static void main(String[] args) {
         StringBuffer sb = new StringBuffer("");
