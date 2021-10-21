@@ -157,8 +157,11 @@ public class SyntaxAnalyzer {
     public int toDecimal(String numberString){
         if(numberString.startsWith("0x")||numberString.startsWith("0X"))
             return Integer.parseInt(numberString.substring(2),16);
-        else if(numberString.startsWith("0"))
+        else if(numberString.startsWith("0")){
+            if(numberString.length() == 1)
+                return 0;
             return Integer.parseInt(numberString.substring(1),8);
+        }
         else{
             return Integer.parseInt(numberString);
         }
