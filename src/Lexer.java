@@ -42,7 +42,7 @@ public class Lexer {
     }
 
     public boolean isNumber(String s){
-        if(s.matches("(0x|X)[0-9a-fA-F]+"))
+        if(s.matches("(0x|0X)[0-9a-fA-F]+"))
             return true;
         if(s.matches("[1-9][0-9]*"))
             return true;
