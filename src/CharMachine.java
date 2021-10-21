@@ -107,7 +107,7 @@ public class CharMachine {
         }else if(SymbolTable.getInstance().isReservedWord(ch)){
             cat();
         }else{
-            System.out.println("ERROR");
+           
         }
     }
 
