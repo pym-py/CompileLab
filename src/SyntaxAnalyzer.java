@@ -79,7 +79,7 @@ public class SyntaxAnalyzer {
             System.out.println("ret");
             lexer.toNextToken();
             int ret = Exp();
-            System.out.println(ret);
+            //System.out.println(ret);
             if(!lexer.getToken().equals(";")){
                 throw new MyError(lexer.getLine(), "Error 1");
             }else
