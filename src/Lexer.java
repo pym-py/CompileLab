@@ -55,6 +55,8 @@ public class Lexer {
     public void toNextToken() throws MyError {
         if(!cm.isDone()){
             cm.getNextToken();
+            if(cm.getToken().equals(""))
+                System.exit(0);
             if(!isLegalToken(cm.getToken())){
                 throw new MyError(cm.getCurrentLine(), "TokenIllegal");
             }
