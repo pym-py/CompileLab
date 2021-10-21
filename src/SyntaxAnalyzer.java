@@ -170,7 +170,8 @@ public class SyntaxAnalyzer {
     public void removeComment(){
         String s = lexer.cm.str;
         s = s.replaceAll("//[\\s\\S]*?\\n", "\n");
-        lexer.cm.str = s.replaceAll("//[\\ = s.replaceAll("/\\*{1,2}[\\s\\S]*?\\*/", " ");
+        lexer.cm.str = s.replaceAll("/\\*{1,2}[\\s\\S]*?\\*/", " ");
+
 
     }
 
