@@ -1,6 +1,6 @@
-[jobs.lexer]
+[jobs.lab3]
 image = { source = "dockerfile", path = "."}
 
 run = [
-  "java -cp dst/ Lexer < $input",
+  "java -cp dst/ ./Test <$input >$ir",
 ]
